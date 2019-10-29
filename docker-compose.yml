@@ -11,6 +11,9 @@ services:
     environment:
       - DOCKER_JUPYTER_CONTAINER=jupyterlab_img
       - DOCKER_NETWORK_NAME=${COMPOSE_PROJECT_NAME}_default
+      - OAUTH_CALLBACK_URL
+      - OAUTH_CLIENT_ID
+      - OAUTH_CLIENT_SECRET
       - HUB_IP=jupyterhub
       - HOST
     labels:
@@ -26,7 +29,7 @@ services:
     command: echo
 
   reverse-proxy:
-    image: traefik
+    image: traefik:v1.7.16
     container_name: reverse-proxy
     ports:
       - "80:80"
@@ -34,7 +37,7 @@ services:
       - "8080:8080"
     volumes:
       - ./reverse-proxy/traefik.toml:/etc/traefik/traefik.toml
-      - /etc/certs:/etc/certs
+      - /etc/ssl/certs:/etc/certs
       - /var/run/docker.sock:/var/run/docker.sock
     restart: on-failure
 

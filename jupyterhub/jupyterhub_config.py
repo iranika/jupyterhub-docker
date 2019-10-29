@@ -16,21 +16,11 @@ c.JupyterHub.admin_access = True
 c.Spawner.default_url = '/lab'
 
 ## Authenticator
-from jhub_cas_authenticator.cas_auth import CASAuthenticator
-c.JupyterHub.authenticator_class = CASAuthenticator
-
-# The CAS URLs to redirect (un)authenticated users to.
-c.CASAuthenticator.cas_login_url = 'https://cas.uvsq.fr/login'
-c.CASLocalAuthenticator.cas_logout_url = 'https://cas.uvsq/logout'
-
-# The CAS endpoint for validating service tickets.
-c.CASAuthenticator.cas_service_validate_url = 'https://cas.uvsq.fr/serviceValidate'
-
-# The service URL the CAS server will redirect the browser back to on successful authentication.
-c.CASAuthenticator.cas_service_url = 'https://%s/hub/login' % os.environ['HOST']
-
-c.Authenticator.admin_users = { 'lucadefe' }
-
+from oauthenticator.github import GitHubOAuthenticator
+c.JupyterHub.authenticator_class = GitHubOAuthenticator
+c.GithubOAuthenticator.oauth_callback_url = 'https://kubota-jnlab02.japaneast.cloudapp.azure.com/hub/oauth_callback'
+c.Authenticator.whitelist = {'iranika' }
+c.Authenticator.admin_users = {'iranika' }
 
 ## Docker spawner
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
