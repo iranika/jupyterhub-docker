@@ -16,11 +16,11 @@ c.JupyterHub.admin_access = True
 c.Spawner.default_url = '/lab'
 
 ## Authenticator
-from oauthenticator.github import GitHubOAuthenticator
-c.JupyterHub.authenticator_class = GitHubOAuthenticator
-c.GithubOAuthenticator.oauth_callback_url = 'https://kubota-jnlab02.japaneast.cloudapp.azure.com/hub/oauth_callback'
-c.Authenticator.whitelist = {'iranika' }
-c.Authenticator.admin_users = {'iranika' }
+from oauthenticator.github import LocalGitHubOAuthenticator
+c.JupyterHub.authenticator_class = LocalGitHubOAuthenticator
+c.LocalGitHubOAuthenticator.oauth_callback_url = os.environ['OAUTH_CALLBACK_URL']
+c.Authenticator.whitelist = {'iranika','aki-kubota' }
+c.Authenticator.admin_users = {'iranika', 'aki-kubota' }
 
 ## Docker spawner
 c.JupyterHub.spawner_class = 'dockerspawner.DockerSpawner'
@@ -32,13 +32,13 @@ c.JupyterHub.hub_ip = os.environ['HUB_IP']
 # user data persistence
 # see https://github.com/jupyterhub/dockerspawner#data-persistence-and-dockerspawner
 notebook_dir = os.environ.get('DOCKER_NOTEBOOK_DIR') or '/home/jovyan'
+#notebook_dir = '/home/{username}' or '/home/jovyan'
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = { 'jupyterhub-user-{username}': notebook_dir }
 
 # Other stuff
 c.Spawner.cpu_limit = 1
 c.Spawner.mem_limit = '10G'
-
 
 ## Services
 c.JupyterHub.services = [

@@ -20,6 +20,16 @@ RUN apt-get update && \
     && apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+#install powershell
+#RUN wget -q https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb && \
+#    dpkg -i packages-microsoft-prod.deb && \
+#    apt-get update && \
+#    apt-get install -y powershell
+#install ruby
+#RUN apt-get -y install libtool libffi-dev ruby ruby-dev make libzmq3-dev libczmq-dev gem
+#RUN gem install ffi-rzmq && gem install iruby --pre && iruby register --force
+#delete apt lists
+
 USER $NB_UID
 
 # Conda packages
@@ -52,11 +62,16 @@ RUN conda install --quiet --yes \
 
 ENV CPATH=$CONDA_DIR/include
 
+RUN pip install --upgrade --force-reinstall pyzmq
 RUN pip install \
     pari_jupyter \
 #    PySingular jupyter_kernel_singular \
+    sshkernel \
     scilab-kernel && \
     fix-permissions $CONDA_DIR
+RUN python -m sshkernel install --sys-prefix
+# powershell kernel
+#RUN pip install powershell_kernel && python -m powershell_kernel.install
 
 # Fix SageMath kernel
 USER root
