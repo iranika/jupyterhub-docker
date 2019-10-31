@@ -8,9 +8,23 @@ USER root
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     vim \
-    && apt-get clean && \
+    iputils-ping \
+    net-tools \
+    curl \
+    ssh
+# install pwsh
+RUN wget -q https://github.com/PowerShell/PowerShell/releases/download/v6.2.3/powershell_6.2.3-1.ubuntu.18.04_amd64.deb ; \
+    dpkg -i powershell_6.2.3-1.ubuntu.18.04_amd64.deb ; \
+    apt-get -y install -f
+
+# crean apt
+RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+
 
 # Python packages
 ADD requirements.txt .
 RUN pip install -r requirements.txt
+RUN python -m bash_kernel.install
+RUN python -m sshkernel install --sys-prefix
+RUN python -m powershell_kernel.install --powershell-command pwsh
