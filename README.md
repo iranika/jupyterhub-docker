@@ -4,6 +4,14 @@ This is a [JupyterHub](https://jupyter.org/hub) deployment based on
 Docker currently in use at [Université de
 Versailles](https://jupyter.ens.uvsq.fr/).
 
+## 注記
+docker-composeではjupyterhub,jupyterlab-throaway,reverse-proxyの3コンテナが立ち上がります。
+各ユーザのjupyter-{username}コンテナはdockerspownによって、立ち上げられるため上記のcomposeグループには入っていません。
+そのため`docker-compose down`ではjupyter-{username}コンテナが削除されません。
+そして最悪なことに、jupyter-{username}コンテナを削除せずに`docker-compose up`しても、docekrspownは既にコンテナがすでに存在しているためspownできずに`500 internal server error`をユーザに返します。
+`docker-compose down`の後に`docker rm $(docker ps -aq)`でコンテナをすべて削除するようにしてくだい。
+また、`docker-compose up`の前に`docker ps -a`でjupyter-{username}コンテナがいたら`docker rm`で削除してから`docker-compose up`するようにしてください。
+
 ## Features
 
 - Containerized single user Jupyter servers, using
