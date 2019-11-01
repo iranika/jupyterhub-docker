@@ -3,6 +3,7 @@
 This is a [JupyterHub](https://jupyter.org/hub) deployment based on
 Docker currently in use at [Université de
 Versailles](https://jupyter.ens.uvsq.fr/).
+fork from https://github.com/defeo/jupyterhub-docker
 
 ## 注記
 docker-composeではjupyterhub,jupyterlab-throaway,reverse-proxyの3コンテナが立ち上がります。  
@@ -12,6 +13,33 @@ docker-composeではjupyterhub,jupyterlab-throaway,reverse-proxyの3コンテナ
 
 `docker-compose down`の後に`docker rm $(docker ps -aq)`でコンテナをすべて削除するようにしてくだい。  
 また、`docker-compose up`の前に`docker ps -a`でjupyter-{username}コンテナがいたら`docker rm`で削除してから`docker-compose up`するようにしてください。  
+
+## 最低限必要な変更項目
+
+### /template.env
+
+template.envのファイル名を.envに変更して、以下項目の値を設定してください。
+```.env
+OAUTH_CALLBACK_URL=xxxxx
+OAUTH_CLIENT_ID=xxxxx
+OAUTH_CLIENT_SECRET=xxxxx
+```
+
+### /jupyterhub/jupyterhub_config.py
+
+```
+c.Authenticator.whitelist = {'iranika','aki-kubota' }
+c.Authenticator.admin_users = {'iranika', 'aki-kubota' }
+```
+
+### /reverse-proxy/traefik.toml
+
+```
+      [[entryPoints.https.tls.certificates]]
+      certFile = "/etc/certs/fullchain1.pem"
+      keyFile = "/etc/certs/privkey1.pem"
+```
+
 
 ## Features
 
