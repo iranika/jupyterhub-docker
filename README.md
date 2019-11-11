@@ -27,12 +27,18 @@ OAUTH_CLIENT_SECRET=xxxxx
 
 ### /jupyterhub/jupyterhub_config.py
 
+ホワイトリストとadminユーザの設定をしてください。
+adminユーザはJupyter-hub全体のセッションにアクセスが可能です。
+
 ```
 c.Authenticator.whitelist = {'iranika','aki-kubota' }
 c.Authenticator.admin_users = {'iranika', 'aki-kubota' }
 ```
 
 ### /reverse-proxy/traefik.toml
+
+SSLの設定が必要です。
+デフォルトでは/etc/certs/配下にcertFileとkeyFileを配置する必要があります。
 
 ```
       [[entryPoints.https.tls.certificates]]
